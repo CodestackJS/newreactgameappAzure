@@ -8,7 +8,7 @@ import { AxiosRequestConfig, CanceledError } from "axios";
 //help us shaping our data in the form of our interfaces(type) props to pass data from parent component to child
 
 
-interface FetchResponse<T>{
+export interface FetchResponse<T>{
     count: number;
     results: T[];
 }
