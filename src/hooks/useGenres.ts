@@ -1,9 +1,10 @@
+// import useData from "./useData";
+// import apiClient from "../services/apiClient";
 import { useQuery } from "@tanstack/react-query";
-import useData from "./useData";
 import { CACHE_KEY_GENRES } from "../constants";
-import apiClient from "../services/apiClient";
+import APIClient, { FetchResponse } from "../services/apiClient";
 
-
+const apiClient = new APIClient<Genre>('/genres')
 
 
 
@@ -23,11 +24,12 @@ export interface FetchGenreResponse<T>{
 
 
 // const useGenres = () => useData<Genre>('/genres');
-const useGenres = () => useQuery({
+const useGenres = () => useQuery<FetchResponse<Genre>>({
     queryKey: CACHE_KEY_GENRES,
-    queryFn: () =>
-            apiClient
-                .get<FetchGenreResponse<Genre>>('/genres').then(res => res.data)
+    queryFn: () => apiClient.getAll({}),
+    staleTime: 24 * 60 * 60 * 1000 // 24 hrs
+            // apiClient
+            //     .get<FetchGenreResponse<Genre>>('/genres').then(res => res.data)
 });
 
 
