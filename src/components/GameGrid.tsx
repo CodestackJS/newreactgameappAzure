@@ -2,7 +2,7 @@
 
 // import { useEffect, useState } from "react"
 // import apiClient from "../services/apiClient"
-import { SimpleGrid, Text } from "@chakra-ui/react"
+import { Button, SimpleGrid, Text } from "@chakra-ui/react"
 // import useGames, { Platform } from "../hooks/useGames"
 import GameCard from "./GameCard"
 import GameCardSkeleton from "./GameCardSkeleton";
@@ -10,6 +10,7 @@ import GameCardContainer from "./GameCardContainer";
 // import { Genre } from "../hooks/useGenres";
 import { GameQuery } from "../App";
 import useGames, { Game } from "../hooks/useGames";
+import React from "react";
 
 
 interface Props{
@@ -20,7 +21,7 @@ interface Props{
 const GameGrid = ({gameQuery}:Props) => {
 
 //  const{data, error, isLoading} = useGames(gameQuery);
-const{data, error, isLoading} = useGames(gameQuery);
+const{data, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage} = useGames(gameQuery);
 //where the helper function to add, delete or update data
 
 const skeleton = [
@@ -40,10 +41,24 @@ const skeleton = [
             </GameCardContainer>
           ))}
 
+        {data?.pages.map((page, index) => (
+          <React.Fragment key={index}>
+            {page.results.map((game) => (
+              <GameCardContainer key={game.id}>
+                <GameCard game={game} />
+              </GameCardContainer>
+            ))}
+          </React.Fragment>
+        ))}
+          
+
         {/* for every 1 spacing is 4px */}
-        {data?.results.map((game:Game) => 
-        <GameCard game={game} key={game.id}></GameCard>)}
+        {/* {data?.results.map((game:Game) =>  */}
+        {/* <GameCard game={game} key={game.id}></GameCard>)} */}
     </SimpleGrid>
+
+    {hasNextPage && <Button onClick={() => fetchNextPage()}>{isFetchingNextPage ? 'Loading....': 'Load More'}</Button>}
+
     {error && <Text color={'red'}></Text>}
     
     
